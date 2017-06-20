@@ -78,9 +78,9 @@ def run_bottleneck_on_image(sess, image_data, image_data_tensor,
 def create_inception_graph():
     with tf.Session() as sess:
         model_filename = os.path.join(model_dir, 'classify_image_graph_def.pb')
-        with gfile.FastGFile(model_filename, 'rb') as f:
+        with gfile.FastGFile(model_filename, 'rb') as f:  #extracting the  inception proto fine 
             graph_def = tf.GraphDef()
-            graph_def.ParseFromString(f.read())
+            graph_def.ParseFromString(f.read())  #fill the tuple with the operations in the graph 
             bottleneck_tensor, jpeg_data_tensor, resized_input_tensor = (tf.import_graph_def(graph_def, name='',
                                                                                              return_elements=[
                                                                                                  BOTTLENECK_TENSOR_NAME,
