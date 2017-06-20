@@ -81,7 +81,7 @@ def create_bottleneck_files(sess, jpeg_data_tensor, bottleneck_tensor):
 def run_bottleneck_on_image(sess, image_data, image_data_tensor,
                             bottleneck_tensor):
     """
-    
+
     :param sess:
     :param image_data:
     :param image_data_tensor:
@@ -95,6 +95,10 @@ def run_bottleneck_on_image(sess, image_data, image_data_tensor,
 
 # Create graph from the inception V3 model
 def create_inception_graph():
+    """
+    
+    :return:
+    """
     with tf.Session() as sess:
         model_filename = os.path.join(model_dir, 'classify_image_graph_def.pb')
         with gfile.FastGFile(model_filename, 'rb') as f:  # extracting the  inception proto fine
@@ -110,9 +114,7 @@ def create_inception_graph():
 
 def main():
     graph, bottleneck_tensor, jpeg_data_tensor, resized_image_tensor = (create_inception_graph())
-
     sess = tf.Session()
-
     create_bottleneck_files(sess, jpeg_data_tensor, bottleneck_tensor)
 
 
