@@ -19,6 +19,7 @@ from skimage import transform as tf
 import numpy as np
 import random
 
+
 def is_minmax_tuple(param):
     """Returns whether the parameter is a tuple containing two values.
 
@@ -31,6 +32,7 @@ def is_minmax_tuple(param):
         Boolean
     """
     return type(param) is tuple and len(param) == 2
+
 
 def create_aug_matrices(nb_matrices, img_width_px, img_height_px,
                         scale_to_percent=1.0, scale_axis_equally=False,
@@ -120,9 +122,9 @@ def create_aug_matrices(nb_matrices, img_width_px, img_height_px,
         scale_x_min = scale_to_percent
         scale_x_max = 1.0 - (scale_to_percent - 1.0)
     assert scale_x_min > 0.0
-    #if scale_x_max >= 2.0:
+    # if scale_x_max >= 2.0:
     #     warnings.warn("Scaling by more than 100 percent (%.2f)." % (scale_x_max,))
-    scale_y_min = scale_x_min # scale_axis_equally affects the random value generation
+    scale_y_min = scale_x_min  # scale_axis_equally affects the random value generation
     scale_y_max = scale_x_max
 
     # rotation (min/max values)
@@ -175,13 +177,13 @@ def create_aug_matrices(nb_matrices, img_width_px, img_height_px,
         # moves it back to the center.
         # The movement is neccessary, because rotation is applied to the top left
         # and not to the image's center (same for scaling and shear).
-        #print("scale_x", scale_x, "scale_y", scale_y)
-        #scale_shift_x = ((img_width_px * scale_x) - img_width_px) / 2
-        #scale_shift_y = ((img_height_px * scale_y) - img_height_px) / 2
-        #print("img_width_px", img_width_px, "img_height_px", img_height_px)
-        #print("scale shift x", scale_shift_x, "scale shift y", scale_shift_y)
-        #matrix_scale = tf.AffineTransform(scale=(scale_x, scale_y))
-        #matrix_scale_shift = tf.SimilarityTransform(translation=[scale_shift_x, scale_shift_y])
+        # print("scale_x", scale_x, "scale_y", scale_y)
+        # scale_shift_x = ((img_width_px * scale_x) - img_width_px) / 2
+        # scale_shift_y = ((img_height_px * scale_y) - img_height_px) / 2
+        # print("img_width_px", img_width_px, "img_height_px", img_height_px)
+        # print("scale shift x", scale_shift_x, "scale shift y", scale_shift_y)
+        # matrix_scale = tf.AffineTransform(scale=(scale_x, scale_y))
+        # matrix_scale_shift = tf.SimilarityTransform(translation=[scale_shift_x, scale_shift_y])
         matrix_to_topleft = tf.SimilarityTransform(translation=[-shift_x, -shift_y])
         matrix_transforms = tf.AffineTransform(scale=(scale_x, scale_y),
                                                rotation=rotation, shear=shear,
@@ -190,13 +192,14 @@ def create_aug_matrices(nb_matrices, img_width_px, img_height_px,
         matrix_to_center = tf.SimilarityTransform(translation=[shift_x, shift_y])
 
         # Combine the three matrices to one affine transformation (one matrix)
-        #matrix = matrix_scale + matrix_scale_shift + matrix_to_topleft + matrix_transforms + matrix_to_center
+        # matrix = matrix_scale + matrix_scale_shift + matrix_to_topleft + matrix_transforms + matrix_to_center
         matrix = matrix_to_topleft + matrix_transforms + matrix_to_center
 
         # one matrix is ready, add it to the result
         result.append(matrix.inverse)
 
     return result
+
 
 def apply_aug_matrices(images, matrices, transform_channels_equally=True,
                        channel_is_first_axis=False, random_order=True,
@@ -279,9 +282,9 @@ def apply_aug_matrices(images, matrices, transform_channels_equally=True,
     if len(images.shape) == 4:
         has_channels = True
         if channel_is_first_axis:
-            nb_channels = images.shape[1] # first axis within each image
+            nb_channels = images.shape[1]  # first axis within each image
         else:
-            nb_channels = images.shape[3] # last axis within each image
+            nb_channels = images.shape[3]  # last axis within each image
 
     # whether to apply the transformations directly to the whole image
     # array (True) or for each channel individually (False)
@@ -357,6 +360,7 @@ def apply_aug_matrices(images, matrices, transform_channels_equally=True,
 
     return result
 
+
 class ImageAugmenter(object):
     """Helper class to randomly augment images, usually for neural networks.
 
@@ -372,6 +376,7 @@ class ImageAugmenter(object):
                             translation_x_px=5)
         augmented_images = ia.augment_batch(images)
     """
+
     def __init__(self, img_width_px, img_height_px, channel_is_first_axis=False,
                  hflip=False, vflip=False,
                  scale_to_percent=1.0, scale_axis_equally=False,
@@ -584,7 +589,7 @@ class ImageAugmenter(object):
             # if this is simply a view, then the input array gets flipped too
             # for some reason
             images_flipped = np.copy(images)
-            #images_flipped = images.view()
+            # images_flipped = images.view()
 
             if len(shape) == 4 and self.channel_is_first_axis:
                 # roll channel to the last axis
@@ -613,9 +618,9 @@ class ImageAugmenter(object):
         # for improved performance (evade applying matrices)
         # --------------------------------
         if self.pregenerated_matrices is None \
-           and self.scale_to_percent == 1.0 and self.rotation_deg == 0 \
-           and self.shear_deg == 0 \
-           and self.translation_x_px == 0 and self.translation_y_px == 0:
+                and self.scale_to_percent == 1.0 and self.rotation_deg == 0 \
+                and self.shear_deg == 0 \
+                and self.translation_x_px == 0 and self.translation_y_px == 0:
             return np.array(images, dtype=np.float32) / 255
 
         # --------------------------------
@@ -676,7 +681,7 @@ class ImageAugmenter(object):
             images = np.resize(image, (nb_repeat, image.shape[0], image.shape[1]))
         else:
             images = np.resize(image, (nb_repeat, image.shape[0], image.shape[1],
-                               image.shape[2]))
+                                       image.shape[2]))
         return self.plot_images(images, True, show_plot=show_plot)
 
     def plot_images(self, images, augment, show_plot=True, figure=None):

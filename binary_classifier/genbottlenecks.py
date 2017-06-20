@@ -1,12 +1,9 @@
 """
-    More info at https://www.tensorflow.org/tutorials/image_retraining
-    Download inception model from 'http://download.tensorflow.org/models/image/imagenet/inception-2015-12-05.tgz'
-    Place it in 'inception' folder
-    'Bottleneck' is the layer before the final output layer which actually does the classification
-
-
+More info at https://www.tensorflow.org/tutorials/image_retraining
+Download inception model from 'http://download.tensorflow.org/models/image/imagenet/inception-2015-12-05.tgz'
+Place it in 'inception' folder
+'Bottleneck' is the layer before the final output layer which actually does the classification
 """
-
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -45,11 +42,25 @@ bottleneck_dir = 'bottlenecks'
 
 
 def print_layers():
+    """
+    Only for debugging
+    TODO: Remove this
+    :return:
+    """
     for tensor in tf.get_default_graph().as_graph_def().node:
         print(tensor.name)
 
 
-def create_bottleneck_file(sess, jpeg_data_tensor, bottleneck_tensor):
+def create_bottleneck_files(sess, jpeg_data_tensor, bottleneck_tensor):
+    """
+    This function create .txt files with probability values obtained from bottleneck
+    layer for each image in the given directory.
+    :param sess:
+    :param jpeg_data_tensor:
+    :param bottleneck_tensor:
+    :return:
+    """
+
     file_list = []
     file_glob = os.path.join(image_dir, '*.jpg')
     file_list.extend(gfile.Glob(file_glob))
@@ -69,6 +80,14 @@ def create_bottleneck_file(sess, jpeg_data_tensor, bottleneck_tensor):
 
 def run_bottleneck_on_image(sess, image_data, image_data_tensor,
                             bottleneck_tensor):
+    """
+    
+    :param sess:
+    :param image_data:
+    :param image_data_tensor:
+    :param bottleneck_tensor:
+    :return:
+    """
     bottleneck_values = sess.run(bottleneck_tensor, {image_data_tensor: image_data})
     bottleneck_values = np.squeeze(bottleneck_values)
     return bottleneck_values
@@ -94,7 +113,7 @@ def main():
 
     sess = tf.Session()
 
-    create_bottleneck_file(sess, jpeg_data_tensor, bottleneck_tensor)
+    create_bottleneck_files(sess, jpeg_data_tensor, bottleneck_tensor)
 
 
 if __name__ == '__main__':

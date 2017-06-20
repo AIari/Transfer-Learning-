@@ -22,7 +22,7 @@ DATASETS = ["baubles", "christmas-trees", "snowy-landscapes"]
 SCALES = {
     "baubles": (64, 64),
     "christmas-trees": (64, 64),
-    "snowy-landscapes": (64, 64+32)
+    "snowy-landscapes": (64, 64 + 32)
 }
 AUGMENTATIONS = {
     "baubles": {
@@ -47,6 +47,7 @@ AUGMENTATIONS = {
         "brightness_change": 0.1, "noise_mean": 0.0, "noise_std": 0.00
     }
 }
+
 
 def main():
     """Main method that reads the images, augments them, normalizes
@@ -74,8 +75,8 @@ def main():
         # is reached, resize it (e.g. 64x64), save it
         for img_idx, (image_filepath, image) in enumerate(zip(dataset.fps, dataset.get_images())):
             print("[%s] Image %d of %d (%.2f%%)..." \
-                  % (dataset_name, img_idx+1, len(dataset.fps),
-                     100*(img_idx+1)/len(dataset.fps)))
+                  % (dataset_name, img_idx + 1, len(dataset.fps),
+                     100 * (img_idx + 1) / len(dataset.fps)))
 
             # IOErrors during loading of images result here in a None value
             if image is None:
@@ -119,6 +120,7 @@ def main():
         print(err)
     print("Finished.")
 
+
 def to_aspect_ratio_add(image, target_ratio):
     """Add black cols/rows to an image so that it matches an aspect ratio.
     Args:
@@ -144,7 +146,7 @@ def to_aspect_ratio_add(image, target_ratio):
             if i % 2 == 1:
                 pad_right += 1
                 width += 1
-            else: # i % 4 == 3
+            else:  # i % 4 == 3
                 pad_left += 1
                 width += 1
             ratio = width / height
@@ -155,7 +157,7 @@ def to_aspect_ratio_add(image, target_ratio):
             if i % 2 == 1:
                 pad_top += 1
                 height += 1
-            else: # i % 4 == 3
+            else:  # i % 4 == 3
                 pad_bottom += 1
                 height += 1
             ratio = width / height
@@ -166,9 +168,10 @@ def to_aspect_ratio_add(image, target_ratio):
         image = np.pad(image, ((pad_top, pad_bottom), \
                                (pad_left, pad_right), \
                                (0, 0)), \
-                              mode="constant")
+                       mode="constant")
 
     return image
+
 
 # currently not used in this script, only the _add method above is used
 def to_aspect_ratio_add_and_remove(image, target_ratio):
@@ -206,7 +209,7 @@ def to_aspect_ratio_add_and_remove(image, target_ratio):
             elif i % 4 == 1:
                 pad_right += 1
                 width += 1
-            else: # i % 4 == 3
+            else:  # i % 4 == 3
                 pad_left += 1
                 width += 1
             ratio = width / height
@@ -223,7 +226,7 @@ def to_aspect_ratio_add_and_remove(image, target_ratio):
             elif i % 4 == 1:
                 pad_top += 1
                 height += 1
-            else: # i % 4 == 3
+            else:  # i % 4 == 3
                 pad_bottom += 1
                 height += 1
             ratio = width / height
@@ -238,7 +241,7 @@ def to_aspect_ratio_add_and_remove(image, target_ratio):
         image = np.pad(image, ((pad_top, pad_bottom), \
                                (pad_left, pad_right), \
                                (0, 0)), \
-                              mode="constant")
+                       mode="constant")
 
     return image
 
@@ -303,14 +306,16 @@ def augment(image, n,
         # clip to 0-255
         img = np.clip(img, 0, 255).astype(np.uint8)
 
-        arr = tf.warp(img, matrix, mode="nearest") # projects to float 0-1
+        arr = tf.warp(img, matrix, mode="nearest")  # projects to float 0-1
         img = np.array(arr * 255, dtype=np.uint8)
         result.append(img)
 
     return result
 
+
 class Dataset(object):
     """Helper class to handle the loading of the LFW dataset dataset."""
+
     def __init__(self, dirs):
         """Instantiate a dataset object.
         Args:
@@ -342,13 +347,14 @@ class Dataset(object):
             Generator of images (numpy arrays).
         """
         start_at = 0 if start_at is None else start_at
-        end_at = len(self.fps) if count is None else start_at+count
+        end_at = len(self.fps) if count is None else start_at + count
         for fp in self.fps[start_at:end_at]:
             try:
                 image = ndimage.imread(fp, mode="RGB")
             except IOError as exc:
                 image = None
             yield image
+
 
 if __name__ == "__main__":
     main()
