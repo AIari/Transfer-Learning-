@@ -9,9 +9,9 @@ socket.setdefaulttimeout(10)
 import urllib
 
 FILE_DIR = os.path.dirname(os.path.realpath(__file__))
-WRITE_MAIN_DIR = os.path.join(FILE_DIR, "../binary_classifier/dataset/temp")
-WRITE_EVAL = os.path.join(FILE_DIR, "../binary_classifier/dataset/temp/eval")
-WRITE_TRAIN = os.path.join(FILE_DIR, "../binary_classifier/dataset/temp/train")
+WRITE_TEMP = os.path.join(FILE_DIR, "../binary_classifier/dataset/temp")
+WRITE_EVAL = os.path.join(FILE_DIR, "../binary_classifier/dataset/eval")
+WRITE_TRAIN = os.path.join(FILE_DIR, "../binary_classifier/dataset/train")
 
 URL_LISTS = [
     ("baubles", os.path.join(FILE_DIR, "baubles_urls.txt")),
@@ -22,6 +22,13 @@ INTERVAL = 1.0  # download an image every x seconds
 
 
 def main():
+    if not os.path.exists(WRITE_TEMP):
+        os.makedirs(WRITE_TEMP)
+    if not os.path.exists(WRITE_EVAL):
+        os.makedirs(WRITE_EVAL)
+    if not os.path.exists(WRITE_TRAIN):
+        os.makedirs(WRITE_TRAIN)
+
     """Downloads images to generate the datasets."""
     for list_name, list_filename in URL_LISTS:
         print("----------------")
@@ -33,13 +40,10 @@ def main():
         for url_idx, url in enumerate(urls):
             print("[%s] Downloading '%s' (%d of %d)" % (list_name, url, url_idx + 1, len(urls)))
             try:
-                download_image(url, WRITE_MAIN_DIR)
+                download_image(url, WRITE_TEMP)
             except Exception as exc:
                 print(exc)
             time.sleep(INTERVAL)
-
-    if not os.path.exists(WRITE_MAIN_DIR):
-        os.makedirs(WRITE_MAIN_DIR)
 
     print("Finished.")
 
