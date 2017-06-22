@@ -1,22 +1,7 @@
-#!/usr/bin/env python
-# Copyright 2016 The TensorFlow Authors. All Rights Reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-# ==============================================================================
-"""Provides data for the custom dataset.
+"""Provides data for a custom dataset.
 
 The dataset scripts used to create the dataset can be found at:
-tensorflow/models/slim/datasets/download_and_convert_flowers.py
+tensorflow/models/slim/datasets/download_and_convert_custom.py
 """
 
 from __future__ import absolute_import
@@ -45,6 +30,7 @@ It's better if you could update this dict appropriately
 """
 _ITEMS_TO_DESCRIPTIONS = {
     'image': 'A color image of varying size.',
+    # This is for a binary classifier
     'label': '0 or 1',
 }
 
@@ -86,7 +72,7 @@ def get_split(split_name, dataset_dir, file_pattern=None, reader=None):
         'image/class/label': tf.FixedLenFeature(
             [], tf.int64, default_value=tf.zeros([], dtype=tf.int64)),
     }
-    
+
     items_to_handlers = {
         'image': slim.tfexample_decoder.Image(),
         'label': slim.tfexample_decoder.Tensor('image/class/label'),
