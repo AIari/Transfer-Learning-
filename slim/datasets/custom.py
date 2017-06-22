@@ -19,7 +19,9 @@ slim = tf.contrib.slim
 Change the _FILE_PATTERN appropriately
 """
 _FILE_PATTERN = 'custom_%s_*.tfrecord'
-
+"""
+Define train/eval sizes
+"""
 SPLITS_TO_SIZES = {'train': 60, 'validation': 20}
 
 _NUM_CLASSES = 2
@@ -36,7 +38,7 @@ _ITEMS_TO_DESCRIPTIONS = {
 
 
 def get_split(split_name, dataset_dir, file_pattern=None, reader=None):
-    """Gets a dataset tuple with instructions for reading flowers.
+    """Gets a dataset tuple with instructions for reading custom dataset images.
 
     Args:
       split_name: A train/validation split name.
