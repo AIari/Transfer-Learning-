@@ -392,7 +392,7 @@ def main(_):
         ######################
         # Select the network #
         ######################
-        network_fn = nets_factory.get_network_fn(
+        network_fn = nets_factory.get_network_fn(  #this is to create the model 
             FLAGS.model_name,
             num_classes=(dataset.num_classes - FLAGS.labels_offset),
             weight_decay=FLAGS.weight_decay,
