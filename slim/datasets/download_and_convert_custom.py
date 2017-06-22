@@ -67,7 +67,7 @@ class ImageReader(object):
         return image
 
 
-def _get_filenames_and_classes(dataset_dir):
+def _get_filenames_and_classes(dataset_dir):  #this is clearly connected with the format how we save the data ser 
     """Returns a list of filenames and inferred class names.
 
     Args:
@@ -84,7 +84,7 @@ def _get_filenames_and_classes(dataset_dir):
     custom_root = os.path.join(dataset_dir, 'custom_photos')
     directories = []
     class_names = []
-    for filename in os.listdir(custom_root):
+    for filename in os.listdir(custom_root):  #extracting the folders 
         path = os.path.join(custom_root, filename)
         if os.path.isdir(path):
             directories.append(path)
@@ -114,7 +114,7 @@ def _get_dataset_filename(dataset_dir, split_name, shard_id):
     return os.path.join(dataset_dir, output_filename)
 
 
-def _convert_dataset(split_name, filenames, class_names_to_ids, dataset_dir):
+def _convert_dataset(split_name, filenames, class_names_to_ids, dataset_dir): #We didn't change this 
     """Converts the given filenames to a TFRecord dataset.
 
     Args:
@@ -189,13 +189,13 @@ def _dataset_exists(dataset_dir):
     return True
 
 
-def run(dataset_dir):
+def run(dataset_dir):             
     """Runs the download and conversion operation.
 
     Args:
       dataset_dir: The dataset directory where the dataset is stored.
     """
-    if not tf.gfile.Exists(dataset_dir):
+    if not tf.gfile.Exists(dataset_dir):      
         tf.gfile.MakeDirs(dataset_dir)
 
     if _dataset_exists(dataset_dir):
@@ -205,18 +205,22 @@ def run(dataset_dir):
     """
     Run this line if you've a remote dataset, otherwise keep it commented
     """
-    # dataset_utils.download_and_uncompress_tarball(_DATA_URL, dataset_dir)
-    photo_filenames, class_names = _get_filenames_and_classes(dataset_dir)
-    class_names_to_ids = dict(zip(class_names, range(len(class_names))))
+    # dataset_utils.download_and_uncompress_tarball(_DATA_URL, dataset_dir)  
+   
+    #it's important to save data set as relevent format. like folders and their 
+    
+    photo_filenames, class_names = _get_filenames_and_classes(dataset_dir) #class names and file names (extract photo files also)
+    class_names_to_ids = dict(zip(class_names, range(len(class_names))))  #this is to change class name to IDs . Zip will asi
+    #assign class names to numbers 
 
     # Divide into train and test:
     random.seed(_RANDOM_SEED)
     random.shuffle(photo_filenames)
-    training_filenames = photo_filenames[_NUM_VALIDATION:]
-    validation_filenames = photo_filenames[:_NUM_VALIDATION]
+    training_filenames = photo_filenames[_NUM_VALIDATION:]   #extract the training file names from the list 
+    validation_filenames = photo_filenames[:_NUM_VALIDATION] #extract the val same as above 
 
     # First, convert the training and validation sets.
-    _convert_dataset('train', training_filenames, class_names_to_ids,
+    _convert_dataset('train', training_filenames, class_names_to_ids,  #converting the data set
                      dataset_dir)
     _convert_dataset('validation', validation_filenames, class_names_to_ids,
                      dataset_dir)
