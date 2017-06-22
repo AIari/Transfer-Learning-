@@ -19,18 +19,6 @@ Usage:
 ```shell
 
 $ python download_and_convert_data.py \
-    --dataset_name=mnist \
-    --dataset_dir=/tmp/mnist
-
-$ python download_and_convert_data.py \
-    --dataset_name=cifar10 \
-    --dataset_dir=/tmp/cifar10
-
-$ python download_and_convert_data.py \
-    --dataset_name=flowers \
-    --dataset_dir=/tmp/flowers
-
-$ python download_and_convert_data.py \
     --dataset_name=custom \
     --dataset_dir=/tmp/datasets/custom
 
